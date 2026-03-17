@@ -47,4 +47,10 @@ Note: The docs plugin is disabled (`docs: false` in the preset config). The `doc
 - The homepage (`src/components/HomepageFeatures/`) consumes this data with `usePluginData('blog-posts-plugin')`.
 - Adding a new `.md` or `.mdx` file to `blog/` (or a folder with `index.md`) will automatically include it on the homepage after the next build. The post must have a `title` field in its frontmatter. Posts retain the order from the blog plugin (newest first).
 
+**Blog post conventions:**
+- File naming: `blog/YYYY/YYYY-MM-DD-slug.md`
+- Required frontmatter: `slug`, `title`, `authors` (key from `authors.yml`), `tags` (keys from `tags.yml`)
+- Include `<!-- truncate -->` to control the preview excerpt — omitting it triggers a build warning (`onUntruncatedBlogPosts: 'warn'`)
+- `onBrokenLinks: 'throw'` — the build hard-fails on any broken internal links
+
 **Styling** uses CSS Modules (`.module.css`) for component-scoped styles and Infima CSS framework variables for global theming. Dark/light mode is handled via CSS custom properties.
