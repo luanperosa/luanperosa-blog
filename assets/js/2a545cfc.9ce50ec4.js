@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkluan_perosa_blog=globalThis.webpackChunkluan_perosa_blog||[]).push([[38],{2957(a){a.exports=JSON.parse('{"metadata":{"permalink":"/luanperosa-blog/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);

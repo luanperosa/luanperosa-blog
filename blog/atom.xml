@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="atom.xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://luanperosa.github.io/luanperosa-blog/blog</id>
+    <title>Luan Perosa Blog</title>
+    <updated>2026-03-16T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://luanperosa.github.io/luanperosa-blog/blog"/>
+    <subtitle>Luan Perosa Blog</subtitle>
+    <icon>https://luanperosa.github.io/luanperosa-blog/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Hello World — Starting My Blog]]></title>
+        <id>https://luanperosa.github.io/luanperosa-blog/blog/hello-world</id>
+        <link href="https://luanperosa.github.io/luanperosa-blog/blog/hello-world"/>
+        <updated>2026-03-16T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Hey there! Welcome to my blog.]]></summary>
+        <content type="html"><![CDATA[<p>Hey there! Welcome to my blog.</p>
+<p>I've decided to start documenting my journey as a software engineer. This space will be a place where I share what I'm learning, the challenges I run into, and the things I find interesting along the way.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-start-a-blog">Why start a blog?<a href="https://luanperosa.github.io/luanperosa-blog/blog/hello-world#why-start-a-blog" class="hash-link" aria-label="Direct link to Why start a blog?" title="Direct link to Why start a blog?" translate="no">​</a></h2>
+<p>I believe that writing about what you learn is one of the best ways to truly understand it. By putting my thoughts into words, I hope to:</p>
+<ul>
+<li class=""><strong>Solidify my understanding</strong> of new concepts</li>
+<li class=""><strong>Track my progress</strong> over time</li>
+<li class=""><strong>Share knowledge</strong> that might help others on a similar path</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-to-expect">What to expect<a href="https://luanperosa.github.io/luanperosa-blog/blog/hello-world#what-to-expect" class="hash-link" aria-label="Direct link to What to expect" title="Direct link to What to expect" translate="no">​</a></h2>
+<p>I plan to write about a variety of topics — from programming languages and frameworks to software design, tooling, and everything in between. Some posts might be deep dives, others might be quick notes or reflections.</p>
+<p>If you're on a similar journey, I hope you find something useful here. Let's learn together!</p>]]></content>
+        <author>
+            <name>Luan</name>
+            <uri>https://github.com/luanperosa</uri>
+        </author>
+        <category label="Personal" term="Personal"/>
+        <category label="Learning" term="Learning"/>
+    </entry>
+</feed>
