@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://luanperosa.github.io/luanperosa-blog/sitemap.xml
