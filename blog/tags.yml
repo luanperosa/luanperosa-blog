@@ -1,0 +1,9 @@
+personal:
+  label: Personal
+  permalink: /personal
+  description: Personal posts about my journey
+
+learning:
+  label: Learning
+  permalink: /learning
+  description: Posts about my learning process
