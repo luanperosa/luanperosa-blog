@@ -21,15 +21,16 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: 'https://luanperosa.com',
+  url: 'https://luanperosa.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/blog/',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'luanperosa', // Usually your GitHub org/user name.
-  projectName: 'blog', // Usually your repo name.
+  projectName: 'luanperosa-blog', // Usually your repo name.
+  trailingSlash: false,
 
   onBrokenLinks: 'throw',
 
@@ -57,7 +58,7 @@ const config = {
           },
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/luanperosa/blog',
+          editUrl: 'https://github.com/luanperosa/luanperosa-blog',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -93,7 +94,7 @@ const config = {
           // },
           {to: '/blog', label: 'Blog', position: 'right'},
           {
-            href: 'https://github.com/luanperosa/blog',
+            href: 'https://github.com/luanperosa/luanperosa-blog',
             label: 'GitHub',
             position: 'right',
           }
@@ -124,7 +125,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/luanperosa/blog',
+                href: 'https://github.com/luanperosa/luanperosa-blog',
               },
             ],
           },
