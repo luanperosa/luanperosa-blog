@@ -81,7 +81,7 @@ const config = {
         title: 'Luan Perosa',
         logo: {
           alt: 'My Site Logo',
-          src: 'https://avatars.githubusercontent.com/u/50602816?v=4',
+          src: 'img/luanperosa/50602816.jpeg',
         },
         items: [
           // {
