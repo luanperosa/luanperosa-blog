@@ -11,7 +11,7 @@ import blogPostsPlugin from './plugins/blog-posts-plugin.js';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Luan Perosa',
+  title: 'Luan Perosa | Tech Blog',
   tagline: 'Here I write about Software Engineering, Frontend Development, and more.',
   favicon: 'img/favicon.ico',
 
@@ -81,7 +81,7 @@ const config = {
         title: 'Luan Perosa',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'https://avatars.githubusercontent.com/u/50602816?v=4',
         },
         items: [
           // {
@@ -107,11 +107,7 @@ const config = {
               {
                 label: 'Linkedin',
                 href: 'https://www.linkedin.com/in/luan-perosa',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/luanperosa',
-              },
+              }
             ],
           },
           {
@@ -128,7 +124,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Luan Perosa Chitto, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Luan Perosa Chitto. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

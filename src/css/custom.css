@@ -6,25 +6,56 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Primary = near black */
+  --ifm-color-primary: #1c1c1e;
+  --ifm-color-primary-dark: #18181a;
+  --ifm-color-primary-darker: #141416;
+  --ifm-color-primary-darkest: #0f0f11;
+  --ifm-color-primary-light: #2a2a2e;
+  --ifm-color-primary-lighter: #3a3a3f;
+  --ifm-color-primary-lightest: #5a5a60;
+
+  /* Backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f7f7f8;
+
+  /* Text */
+  --ifm-font-color-base: #111113;
+  --ifm-font-color-secondary: #6b6b73;
+
+  /* Borders */
+  --ifm-color-emphasis-200: #e5e5e7;
+  --ifm-color-emphasis-300: #d4d4d8;
+
+  /* Code highlight */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.04);
+
+  --ifm-footer-background-color: red;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Primary = subtle off-white (NOT colorful) */
+  --ifm-color-primary: #e8e8e8;
+  --ifm-color-primary-dark: #d4d4d4;
+  --ifm-color-primary-darker: #cfcfcf;
+  --ifm-color-primary-darkest: #a6a6a6;
+  --ifm-color-primary-light: #f0f0f0;
+  --ifm-color-primary-lighter: #f5f5f5;
+  --ifm-color-primary-lightest: #ffffff;
+
+  /* Backgrounds */
+  --ifm-background-color: #0b0b0c;
+  --ifm-background-surface-color: #111113;
+
+  /* Text */
+  --ifm-font-color-base: #f5f5f5;
+  --ifm-font-color-secondary: #a1a1aa;
+
+  /* Borders / subtle UI */
+  --ifm-color-emphasis-200: #1f1f23;
+  --ifm-color-emphasis-300: #2a2a2e;
+
+  /* Code highlight */
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.05);
 }
