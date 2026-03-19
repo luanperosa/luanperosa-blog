@@ -11,7 +11,7 @@ import blogPostsPlugin from './plugins/blog-posts-plugin.js';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Luan Perosa | Tech Blog',
+  title: 'Luan Perosa Blog',
   tagline: 'Here I write about Software Engineering, Frontend Development, and more.',
   favicon: 'img/favicon.ico',
 

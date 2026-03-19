@@ -1,6 +1,7 @@
 .blogList {
   padding: 2rem 0;
   width: 100%;
+  min-height: 400px;
 }
 
 .blogPostItem {
