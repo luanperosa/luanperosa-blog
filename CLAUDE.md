@@ -13,6 +13,7 @@ npm run clear      # Clear Docusaurus cache
 
 # Testing
 npm test           # Run unit tests with Jest
+npm run test:coverage  # Run tests with coverage report
 
 # Deployment
 USE_SSH=true npm run deploy               # Deploy to GitHub Pages via SSH
@@ -38,6 +39,7 @@ Note: The docs plugin is disabled (`docs: false` in the preset config). The `doc
 - `src/pages/index.js` — Homepage with hero banner + blog post list
 - `src/components/HomepageFeatures/` — Homepage blog list component (renders posts from `usePluginData`)
 - `src/css/custom.css` — Global Infima CSS variable overrides (primary color, dark mode)
+- `src/theme/BlogListPage/` — Custom blog list page wrapper with JSON-LD structured data for SEO
 
 **Configuration:**
 - `docusaurus.config.js` — Main config: site metadata, navbar, footer, theme (Prism), presets
@@ -45,7 +47,7 @@ Note: The docs plugin is disabled (`docs: false` in the preset config). The `doc
 **Homepage blog list:**
 - `plugins/blog-posts-plugin.js` — Custom Docusaurus plugin that uses `allContentLoaded` to read blog posts from the built-in `docusaurus-plugin-content-blog` plugin's processed data (no filesystem parsing). Exposes the post list via `setGlobalData`.
 - The homepage (`src/components/HomepageFeatures/`) consumes this data with `usePluginData('blog-posts-plugin')`.
-- Adding a new `.md` or `.mdx` file to `blog/` (or a folder with `index.md`) will automatically include it on the homepage after the next build. The post must have a `title` field in its frontmatter. Posts retain the order from the blog plugin (newest first).
+- Adding a new `.md` or `.mdx` file to `blog/` (or a folder with `index.md`) will automatically include it on the homepage after the next build. The post must have the required frontmatter fields (see blog post conventions below). Posts retain the order from the blog plugin (newest first).
 
 **Blog post conventions:**
 - File naming: `blog/YYYY/YYYY-MM-DD-slug.md`
