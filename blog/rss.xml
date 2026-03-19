@@ -2,28 +2,38 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>Luan Perosa Blog</title>
-        <link>https://luanperosa.github.io/luanperosa-blog/blog</link>
+        <link>https://luanperosa.com/blog</link>
         <description>Luan Perosa Blog</description>
-        <lastBuildDate>Mon, 16 Mar 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 17 Mar 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
+            <title><![CDATA[Docker Under the Hood]]></title>
+            <link>https://luanperosa.com/blog/docker-under-the-hood</link>
+            <guid>https://luanperosa.com/blog/docker-under-the-hood</guid>
+            <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Hey there! Welcome to my blog.]]></description>
+            <content:encoded><![CDATA[<p>Hey there! Welcome to my blog.</p>]]></content:encoded>
+            <category>Docker</category>
+            <category>Learning</category>
+        </item>
+        <item>
             <title><![CDATA[Hello World — Starting My Blog]]></title>
-            <link>https://luanperosa.github.io/luanperosa-blog/blog/hello-world</link>
-            <guid>https://luanperosa.github.io/luanperosa-blog/blog/hello-world</guid>
+            <link>https://luanperosa.com/blog/hello-world</link>
+            <guid>https://luanperosa.com/blog/hello-world</guid>
             <pubDate>Mon, 16 Mar 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[Hey there! Welcome to my blog.]]></description>
             <content:encoded><![CDATA[<p>Hey there! Welcome to my blog.</p>
 <p>I've decided to start documenting my journey as a software engineer. This space will be a place where I share what I'm learning, the challenges I run into, and the things I find interesting along the way.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-start-a-blog">Why start a blog?<a href="https://luanperosa.github.io/luanperosa-blog/blog/hello-world#why-start-a-blog" class="hash-link" aria-label="Direct link to Why start a blog?" title="Direct link to Why start a blog?" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-start-a-blog">Why start a blog?<a href="https://luanperosa.com/blog/hello-world#why-start-a-blog" class="hash-link" aria-label="Direct link to Why start a blog?" title="Direct link to Why start a blog?" translate="no">​</a></h2>
 <p>I believe that writing about what you learn is one of the best ways to truly understand it. By putting my thoughts into words, I hope to:</p>
 <ul>
 <li class=""><strong>Solidify my understanding</strong> of new concepts</li>
 <li class=""><strong>Track my progress</strong> over time</li>
 <li class=""><strong>Share knowledge</strong> that might help others on a similar path</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-to-expect">What to expect<a href="https://luanperosa.github.io/luanperosa-blog/blog/hello-world#what-to-expect" class="hash-link" aria-label="Direct link to What to expect" title="Direct link to What to expect" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-to-expect">What to expect<a href="https://luanperosa.com/blog/hello-world#what-to-expect" class="hash-link" aria-label="Direct link to What to expect" title="Direct link to What to expect" translate="no">​</a></h2>
 <p>I plan to write about a variety of topics — from programming languages and frameworks to software design, tooling, and everything in between. Some posts might be deep dives, others might be quick notes or reflections.</p>
 <p>If you're on a similar journey, I hope you find something useful here. Let's learn together!</p>]]></content:encoded>
             <category>Personal</category>

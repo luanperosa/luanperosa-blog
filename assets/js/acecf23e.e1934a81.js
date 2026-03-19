@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkluan_perosa_blog=globalThis.webpackChunkluan_perosa_blog||[]).push([[903],{1912(a){a.exports=JSON.parse('{"blogBasePath":"/luanperosa-blog/blog","blogTitle":"Blog","authorsListPath":"/luanperosa-blog/blog/authors"}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkluan_perosa_blog=globalThis.webpackChunkluan_perosa_blog||[]).push([[472],{5513(l){l.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Hello World \u2014 Starting My Blog","permalink":"/luanperosa-blog/blog/hello-world","unlisted":false,"date":"2026-03-16T00:00:00.000Z"}]}')}}]);
