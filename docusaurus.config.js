@@ -21,10 +21,9 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: 'https://luanperosa.github.io/',
+  url: 'https://luanperosa.com',
   // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/luanperosa-blog',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
