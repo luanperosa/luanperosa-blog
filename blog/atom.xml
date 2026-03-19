@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="atom.xsl"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://luanperosa.com/blog</id>
-    <title>Luan Perosa Blog</title>
+    <title>Luan Perosa Blog Blog</title>
     <updated>2026-03-16T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://luanperosa.com/blog"/>
-    <subtitle>Luan Perosa Blog</subtitle>
+    <subtitle>Luan Perosa Blog Blog</subtitle>
     <icon>https://luanperosa.com/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Hello World — Starting My Blog]]></title>
