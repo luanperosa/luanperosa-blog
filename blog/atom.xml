@@ -2,21 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://luanperosa.com/blog</id>
     <title>Luan Perosa Blog</title>
-    <updated>2026-03-17T00:00:00.000Z</updated>
+    <updated>2026-03-16T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://luanperosa.com/blog"/>
     <subtitle>Luan Perosa Blog</subtitle>
     <icon>https://luanperosa.com/img/favicon.ico</icon>
-    <entry>
-        <title type="html"><![CDATA[Docker Under the Hood]]></title>
-        <id>https://luanperosa.com/blog/docker-under-the-hood</id>
-        <link href="https://luanperosa.com/blog/docker-under-the-hood"/>
-        <updated>2026-03-17T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Hey there! Welcome to my blog.]]></summary>
-        <content type="html"><![CDATA[<p>Hey there! Welcome to my blog.</p>]]></content>
-        <category label="Docker" term="Docker"/>
-        <category label="Learning" term="Learning"/>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Hello World — Starting My Blog]]></title>
         <id>https://luanperosa.com/blog/hello-world</id>

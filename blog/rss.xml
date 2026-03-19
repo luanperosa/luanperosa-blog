@@ -4,20 +4,10 @@
         <title>Luan Perosa Blog</title>
         <link>https://luanperosa.com/blog</link>
         <description>Luan Perosa Blog</description>
-        <lastBuildDate>Tue, 17 Mar 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 16 Mar 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
-        <item>
-            <title><![CDATA[Docker Under the Hood]]></title>
-            <link>https://luanperosa.com/blog/docker-under-the-hood</link>
-            <guid>https://luanperosa.com/blog/docker-under-the-hood</guid>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Hey there! Welcome to my blog.]]></description>
-            <content:encoded><![CDATA[<p>Hey there! Welcome to my blog.</p>]]></content:encoded>
-            <category>Docker</category>
-            <category>Learning</category>
-        </item>
         <item>
             <title><![CDATA[Hello World — Starting My Blog]]></title>
             <link>https://luanperosa.com/blog/hello-world</link>
