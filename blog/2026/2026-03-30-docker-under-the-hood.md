@@ -1,20 +1,22 @@
 ---
 slug: docker-under-the-hood
-title: Understanding Docker Under the Hood
+title: Docker Under the Hood
 tags: [docker, learning]
 ---
 
-# Understanding Docker Under the Hood
+# Docker Under the Hood
 
 First things first: Docker is **not** a virtual machine. It provides the same isolation benefits, but without needing to virtualize an entire operating system like a VM does.
 
 I'm starting with this because it's a common misconception — and a completely wrong one. So with that out of the way, let's talk about what Docker actually is. **It's just a process running on your Linux system.** At the end of the day, this means Docker can isolate your application in a completely self-contained way — similar in result to a VM, but instead of virtualizing an entire kernel, we're isolating a single process. Let's dig deeper into that.
 
-Open your terminal, run `ps aux` — you'll see every process currently running on your machine. Think of each process as an open Chrome tab, or a bash terminal session. By default, OS processes can at least see each other, share visibility of the system and have access to the host's mount points, filesystem, network interfaces, and so on. But the Docker process is created in a way that it **can't see** anything outside itself. In short, the **Kernel is lying to the Docker process** — through the power of **Namespaces** — making it believe it's completely alone. (In the exercise below we'll see this mechanism working)
+Open your terminal, run `ps aux` — you'll see every process currently running on your machine. Think of each process as an open Chrome tab, or a bash terminal session. By default, OS processes can at least see each other, share visibility of the system and have access to the host's mount points, filesystem, network interfaces, and so on. But the Docker process is created in a way that it **can't see** anything outside itself. In short, the **Kernel is lying to the Docker process** — through the power of **Namespaces** — making it believe it's completely alone. (We'll do an exercise to see this mechanism working).
 
 To do this, Docker leverages the Linux `unshare` command and Linux namespaces. Everything Docker does revolves around this. Docker is essentially a friendlier way to manage the isolation that `unshare` provides.
 
-**Note:** Docker is built to run on Linux. It can absolutely run on Windows and macOS, but in those cases, Docker automatically installs a lightweight Linux VM under the hood — because it still needs a Linux kernel to power all the namespace and cgroup magic described above.
+Docker also provides a away of manage CPU and Memory by leveraging the power of `cgroups`.
+
+**Note:** Docker is built to run on Linux. It can absolutely run on Windows and macOS, but in those cases, Docker automatically installs a lightweight Linux VM under the hood — because it still needs a Linux kernel to power all the namespace and cgroup magic described.
 
 ---
 
@@ -45,13 +47,18 @@ Docker uses namespaces (via `unshare`/`clone`) for isolating: PID, Network, File
 ## A lightweight demo of what Docker does under the hood
 
 Let's install `debootstrap` to download the folder structure of a Linux distribution, then create a namespace-isolated environment from it on our machine.
-**Note:** Remember, Docker is a Linux program, so these commands below should work only if you are in a Linux machine.
+**Note:** Remember, Docker is a Linux program, so these commands should work only if you are in a Linux machine.
 
 ```bash
 sudo apt-get install debootstrap -y
-mkdir /tmp/debian
-debootstrap stable /tmp/debian http://deb.debian.org/debian
+mkdir -p /tmp/debian
+sudo debootstrap stable /tmp/debian http://deb.debian.org/debian
 cd /tmp/debian
+ls
+
+# Debian folder structure
+bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
+boot  etc  lib   media  opt  root  sbin  sys  usr
 ```
 
 Now let's use `unshare` for process isolation. We'll also need to set up the mount points:
@@ -60,10 +67,10 @@ Now let's use `unshare` for process isolation. We'll also need to set up the mou
 sudo unshare --mount --uts --ipc --net --map-root-user --user --pid --fork chroot /tmp/debian bash
 
 # mount these needed filesystem folders
-
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t tmpfs none /tmp
+# these are the minimum virtual filesystems any Linux environment needs to function
 ```
 
 Now run `ps aux` and you'll see only the processes running inside your container:
@@ -71,7 +78,7 @@ Now run `ps aux` and you'll see only the processes running inside your container
 ```
 UID          PID    PPID  C STIME TTY          TIME CMD
 root           1       0  0 05:03 ?        00:00:00 bash
-root          27       1  0 06:28 ?        00:00:00 ps -ef
+root          27       1  0 06:28 ?        00:00:00 ps aux
 ```
 
 Just `bash` and `ps` — fully isolated from everything running on the host. ✅
@@ -107,16 +114,17 @@ Just in case you want to see this, I found this article that can help dip dive i
 
 ---
 
-## Wrapping up
+## Conclusion
 
 Docker built a polished CLI tool that wraps `unshare` and many other Linux primitives to deliver this application isolation mechanism. Remember: **Docker is a process — nothing more.** That process perceives itself as isolated on the machine, but it isn't really — the kernel is lying to it.
 
-Now that you understand Docker's core, you honestly don't need a tutorial on `docker run` or `docker-compose` — that's all in the official docs, with tutorials and most-used commands ready to go. Check out the https://docs.docker.com/get-started/workshop.
+Now that you understand Docker's core, you honestly don't need a tutorial on `docker run` or `docker compose` — that's all in the official docs, with tutorials and most-used commands ready to go. Check out the https://docs.docker.com/get-started/workshop.
 
 ### Key points to study next:
 
-- How Docker uses volumes for data persistence
-- Learn `docker-compose` — it's far better than managing raw Dockerfiles alone
-- What a Docker image actually is
+- How Docker uses volumes for data persistence. See https://docs.docker.com/engine/storage/volumes
+- Learn `docker compose` — it's far better than managing raw Dockerfiles alone, see https://docs.docker.com/compose/
+- Docker image VS Docker Container
+- Docker hub and how to publish your own images. See https://docs.docker.com/docker-hub/
 
-This article was just the starting point — Docker has a lot more to it. But as I mentioned, everything from here is well covered in the official Docker documentation. (Interestingly, the docs don't really explain, or I didn't find, how Docker does things under the hood using `unshare` and namespaces — which is exactly why this article exists.) I hope this helped you understand Docker at a deeper level.
+This was just the starting point — Docker has a lot more to it. But as I mentioned, everything from here is well covered in the official Docker documentation. **Interestingly, the documentation doesn't really explain, or I didn't find, how Docker does things under the hood using `unshare` and namespaces — which is exactly why this content exists.** I hope this helped you understand Docker at a deeper level.
