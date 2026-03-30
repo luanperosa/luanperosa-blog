@@ -76,14 +76,14 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/luanperosa/50602816.jpeg',
       colorMode: {
         respectPrefersColorScheme: true,
       },
       navbar: {
         title: 'Luan Perosa',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Luan Perosa Logo',
           src: 'img/luanperosa/50602816.jpeg',
         },
         items: [
