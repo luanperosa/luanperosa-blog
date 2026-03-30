@@ -13,7 +13,12 @@ function HomepageHeader() {
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <Heading as="h1" className="hero__title">
-          {siteConfig.title}
+          <span style={{display: 'block'}}>{siteConfig.title}</span>
+          {siteConfig.customFields.subtitle && (
+            <span className="hero__subtitle">
+              {siteConfig.customFields.subtitle}
+            </span>
+          )}
         </Heading>
       </div>
     </header>

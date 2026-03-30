@@ -11,8 +11,11 @@ import blogPostsPlugin from './plugins/blog-posts-plugin.js';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Luan Perosa Blog',
-  tagline: 'Here I write about Software Engineering, Frontend Development, and more.',
+  title: 'Luan Perosa',
+  customFields: {
+    subtitle: 'Tech Blog',
+  },
+  tagline: 'Here I write about Software Engineering.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
