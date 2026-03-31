@@ -14,12 +14,12 @@ function HomepageHeader() {
       <div className="container">
         <Heading as="h1" className="hero__title">
           <span style={{display: 'block'}}>{siteConfig.title}</span>
-          {siteConfig.customFields.subtitle && (
-            <span className="hero__subtitle">
-              {siteConfig.customFields.subtitle}
-            </span>
-          )}
         </Heading>
+        {siteConfig.customFields.subtitle && (
+          <p className="hero__subtitle">
+            {siteConfig.customFields.subtitle}
+          </p>
+        )}
       </div>
     </header>
   );
