@@ -6,84 +6,102 @@ tags: [docker, learning]
 
 # Docker Under the Hood
 
-First things first: Docker is **not** a virtual machine. It provides the same isolation benefits, but without needing to virtualize an entire operating system like a VM does.
+First things first: Docker is **not** a virtual machine. It provides similar isolation benefits, but without virtualizing an entire operating system the way a VM does. This is a common misconception worth clearing up before we go any further.
 
-I'm starting with this because it's a common misconception — and a completely wrong one. So with that out of the way, let's talk about what Docker actually is. **It's just a process running on your Linux system.** At the end of the day, this means Docker can isolate your application in a completely self-contained way — similar in result to a VM, but instead of virtualizing an entire kernel, we're isolating a single process. Let's dig deeper into that.
-
-Open your terminal, run `ps aux` — you'll see every process currently running on your machine. Think of each process as an open Chrome tab, or a bash terminal session. By default, OS processes can at least see each other, share visibility of the system and have access to the host's mount points, filesystem, network interfaces, and so on. But the Docker process is created in a way that it **can't see** anything outside itself. In short, the **Kernel is lying to the Docker process** — through the power of **Namespaces** — making it believe it's completely alone. (We'll do an exercise to see this mechanism working).
-
-To do this, Docker leverages the Linux `unshare` command and Linux namespaces. Everything Docker does revolves around this. Docker is essentially a friendlier way to manage the isolation that `unshare` provides.
-
-Docker also provides a away of manage CPU and Memory by leveraging the power of `cgroups`.
-
-**Note:** Docker is built to run on Linux. It can absolutely run on Windows and macOS, but in those cases, Docker automatically installs a lightweight Linux VM under the hood — because it still needs a Linux kernel to power all the namespace and cgroup magic described.
+So what is Docker, exactly? At its core, it's a process running on your Linux system — one that has been isolated from the rest of the machine in a way that makes it feel entirely self-contained. Instead of emulating a full kernel like a VM does, Docker isolates a single process using primitives built directly into the Linux kernel. Let's dig into how that actually works.
 
 ---
 
-## Namespaces and cgroups
+## Processes and Isolation
 
-Docker uses **process isolation via namespaces** and also allows you to **limit resources like memory and CPU via cgroups**.
+Open a terminal and run `ps aux` — you'll see every process currently running on your machine. By default, these processes can see each other, share the host's filesystem, network interfaces, mount points, and more. Most of the time, that's fine. But when you want to run an application in a fully contained environment, that shared visibility becomes a problem.
 
-A **Namespace** is a Linux kernel mechanism that makes a process see only an isolated slice of the system. Each namespace creates the _illusion that the entire system belongs to it_ — its own network, processes, hostname, and filesystem. But in reality, it's still sharing the same kernel as the host machine (even though it can't see that).
+Docker solves this by creating a process that is fundamentally deceived by the kernel. Through a mechanism called **namespaces**, the Linux kernel lies to the Docker process, making it believe it is completely alone on the machine — with its own filesystem, its own network, its own process tree. In reality, it's still sharing the same kernel as the host.
 
-Docker uses namespaces (via `unshare`/`clone`) for isolating: PID, Network, Filesystem (`mnt`), UTS, IPC, and User. It uses **cgroups** to limit CPU, memory, and other resource usage. It also uses **`pivot_root` + User Namespaces** for root filesystem isolation — an evolution of the older `chroot` concept.
+To achieve this, Docker leverages Linux **namespaces** and **cgroups**. These two kernel features are the foundation of everything Docker does. Docker is, in essence, a polished interface for managing the isolation that these primitives provide.
 
-> **Note on `chroot`:** Think of it as the mechanism that gives the Docker process its own directory, making it feel like it's "alone" in there.
-
-### Namespaces Docker uses:
-
-|Namespace|What it isolates|
-|---|---|
-|`pid`|Processes (each container gets its own PID tree)|
-|`net`|Network interfaces, routes, and ports|
-|`mnt`|Mount points (filesystem)|
-|`uts`|Hostname and domain name|
-|`ipc`|Inter-process communication (queues, semaphores)|
-|`user`|UID/GID mappings|
-|`cgroup`|Visibility into the container's own cgroups|
+> **Note:** Docker is built for Linux. It can run on Windows and macOS, but in those cases Docker automatically provisions a lightweight Linux VM under the hood — because it still needs a Linux kernel to power namespaces and cgroups.
 
 ---
 
-## A lightweight demo of what Docker does under the hood
+## Namespaces
 
-Let's install `debootstrap` to download the folder structure of a Linux distribution, then create a namespace-isolated environment from it on our machine.
-**Note:** Remember, Docker is a Linux program, so these commands should work only if you are in a Linux machine.
+A namespace is a Linux kernel mechanism that gives a process an isolated view of some part of the system. Each namespace creates the illusion that the process owns that resource entirely — its own network stack, its own process IDs, its own hostname — while in reality it's still sharing the underlying kernel with the host.
+
+Docker uses the `clone()` system call (and the `unshare` utility, which wraps it) to create new namespaces when launching a container. Here are the namespaces Docker uses and what each one isolates:
+
+| Namespace | What it isolates |
+|-----------|-----------------|
+| `pid`     | Process tree (the container gets its own PID 1) |
+| `net`     | Network interfaces, routes, and ports |
+| `mnt`     | Mount points and filesystem |
+| `uts`     | Hostname and domain name |
+| `ipc`     | Inter-process communication (message queues, semaphores) |
+| `user`    | UID/GID mappings |
+| `cgroup`  | Visibility into the container's own cgroup hierarchy |
+
+For filesystem isolation specifically, Docker uses `pivot_root` rather than the older `chroot` command. Both approaches give a process a new root directory, but `pivot_root` is more robust: it fully replaces the root filesystem and removes access to the old one, whereas `chroot` merely changes the directory lookup path and can be escaped under certain conditions. Think of `chroot` as the conceptual ancestor — `pivot_root` is what Docker actually uses in practice.
+
+---
+
+## cgroups
+
+Namespaces handle *visibility* — what a process can see. **cgroups** (control groups) handle *resources* — what a process can *use*.
+
+Docker uses cgroups to enforce limits on CPU time, memory consumption, disk I/O, and more. This is what allows you to run `docker run --memory=256m` or `--cpus=0.5` and have the kernel actually enforce those constraints. Without cgroups, an isolated process could still starve the host of resources.
+
+---
+
+## A Hands-On Demo
+
+Let's replicate what Docker does at a low level. We'll use `debootstrap` to download a minimal Debian filesystem, then launch a namespace-isolated environment from it using `unshare`.
+
+> **Note:** These commands require a Linux machine. The namespace APIs used here are Linux-specific.
+
+### 1. Set up a minimal Debian root filesystem
 
 ```bash
 sudo apt-get install debootstrap -y
 mkdir -p /tmp/debian
 sudo debootstrap stable /tmp/debian http://deb.debian.org/debian
-cd /tmp/debian
-ls
+```
 
-# Debian folder structure
+Once complete, `/tmp/debian` will contain a full Debian directory tree:
+
+```
 bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
 boot  etc  lib   media  opt  root  sbin  sys  usr
 ```
 
-Now let's use `unshare` for process isolation. We'll also need to set up the mount points:
+### 2. Launch an isolated environment
 
 ```bash
 sudo unshare --mount --uts --ipc --net --map-root-user --user --pid --fork chroot /tmp/debian bash
+```
 
-# mount these needed filesystem folders
+Once inside, mount the virtual filesystems that any Linux environment needs to function:
+
+```bash
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t tmpfs none /tmp
-# these are the minimum virtual filesystems any Linux environment needs to function
 ```
 
-Now run `ps aux` and you'll see only the processes running inside your container:
+> **A note on chroot here:** We're using `chroot` in this demo for simplicity. Docker uses `pivot_root` instead, which is more secure. The behavior is similar enough for demonstration purposes.
+
+### 3. Verify process isolation
+
+Run `ps aux` inside the environment:
 
 ```
-UID          PID    PPID  C STIME TTY          TIME CMD
-root           1       0  0 05:03 ?        00:00:00 bash
-root          27       1  0 06:28 ?        00:00:00 ps aux
+UID   PID  PPID  C STIME TTY   TIME CMD
+root    1     0  0 05:03 ?     0:00 bash
+root   27     1  0 06:28 ?     0:00 ps aux
 ```
 
-Just `bash` and `ps` — fully isolated from everything running on the host. ✅
+Only two processes — `bash` and `ps`. Completely isolated from everything running on the host. ✅
 
-Now test network isolation:
+### 4. Verify network isolation
 
 ```bash
 ip addr
@@ -94,37 +112,33 @@ ip addr
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 ```
 
-No external network interfaces — because we isolated the network namespace with `--net`. ✅
+No external network interfaces, because we isolated the network namespace with `--net`. ✅
 
-Now `exit` back to your host terminal and run the same `unshare` command but **without** the `--net` flag. Inside the new container, run `ip addr` again — you'll now see the host machine's full network interface list, because we didn't isolate that namespace this time.
+To see the difference, exit and re-run the `unshare` command *without* the `--net` flag. Inside the new environment, `ip addr` will now show the host's full network interface list — because we left that namespace shared.
 
 ---
 
-## Bonus: Resource limiting with cgroups
+## Going Further: Resource Limits with cgroups
 
-You could go further and test resource limiting with cgroups — capping memory and CPU. To do that, use something like `cgroup-tools`, or create cgroup entries manually:
+You can extend this demo to test resource limiting using cgroups directly. The basic approach is to create a cgroup, set limits by writing to its control files, and then associate the cgroup with the PID of your `unshare` process:
 
 ```bash
-sudo mkdir /sys/fs/cgroup/cpu/<my-awesome-group>
+sudo mkdir /sys/fs/cgroup/cpu/my-demo-group
+# Write limits to the appropriate files, then assign the PID
 ```
 
-From there, you'd edit the appropriate files to set CPU limits, then associate the cgroup with the PID of your `unshare` process. This requires a deeper understanding of how Linux manages resources, but it's a rewarding rabbit hole, but don't worry if you don't want to do this right now, with Docker we can do it more easily.
-
-Just in case you want to see this, I found this article that can help dip dive in how to manage resources with cgroups https://labs.iximiuz.com/tutorials/controlling-process-resources-with-cgroups
+This requires some familiarity with how Linux manages the cgroup filesystem, but it's a worthwhile exercise. For a thorough walkthrough, <u>[this tutorial from iximiuz](https://labs.iximiuz.com/tutorials/controlling-process-resources-with-cgroups)</u> is excellent. In practice, Docker handles all of this for you through simple flags like `--memory` and `--cpus`.
 
 ---
 
 ## Conclusion
 
-Docker built a polished CLI tool that wraps `unshare` and many other Linux primitives to deliver this application isolation mechanism. Remember: **Docker is a process — nothing more.** That process perceives itself as isolated on the machine, but it isn't really — the kernel is lying to it.
+Docker is a process — nothing more. The kernel uses namespaces to give that process an isolated view of the system, and cgroups to limit the resources it can consume. Everything else Docker provides — images, layers, volumes, the CLI — is built on top of these two primitives.
 
-Now that you understand Docker's core, you honestly don't need a tutorial on `docker run` or `docker compose` — that's all in the official docs, with tutorials and most-used commands ready to go. Check out the https://docs.docker.com/get-started/workshop.
+The official Docker documentation covers the practical side well: how to write Dockerfiles, use Compose, publish images, and manage volumes. What it doesn't explain — and what this article set out to cover — is *why* any of it works. Understanding `unshare`, namespaces, and cgroups gives you a mental model that makes everything else easier to reason about.
 
-### Key points to study next:
-
-- How Docker uses volumes for data persistence. See https://docs.docker.com/engine/storage/volumes
-- Learn `docker compose` — it's far better than managing raw Dockerfiles alone, see https://docs.docker.com/compose/
-- Docker image VS Docker Container
-- Docker hub and how to publish your own images. See https://docs.docker.com/docker-hub/
-
-This was just the starting point — Docker has a lot more to it. But as I mentioned, everything from here is well covered in the official Docker documentation. **Interestingly, the documentation doesn't really explain, or I didn't find, how Docker does things under the hood using `unshare` and namespaces — which is exactly why this content exists.** I hope this helped you understand Docker at a deeper level.
+**Recommended next steps:**
+- [Data persistence with Docker volumes](https://docs.docker.com/engine/storage/volumes)
+- [Docker Compose](https://docs.docker.com/compose/) — the right way to manage multi-container setups
+- [Docker Hub and publishing images](https://docs.docker.com/docker-hub/)
+- [Official getting started workshop](https://docs.docker.com/get-started/workshop/)
