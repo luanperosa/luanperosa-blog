@@ -37,9 +37,15 @@ Note: The docs plugin is disabled (`docs: false` in the preset config). The `doc
 
 **React source** in `src/`:
 - `src/pages/index.js` — Homepage with hero banner + blog post list
+- `src/pages/portfolio.js` — Portfolio page at `/portfolio`, renders cards from `src/data/portfolio.js`
 - `src/components/HomepageFeatures/` — Homepage blog list component (renders posts from `usePluginData`)
 - `src/css/custom.css` — Global Infima CSS variable overrides (primary color, dark mode)
 - `src/theme/BlogListPage/` — Custom blog list page wrapper with JSON-LD structured data for SEO
+
+**Portfolio page:**
+- `src/data/portfolio.js` — Data file exporting `portfolioItems`. Each item has `title`, `description`, `image`, `bullets: string[]`, and optional `url`.
+- `src/pages/portfolio.js` — Renders a 2-column grid of project cards (company name header, screenshot, bold description, bullet list, URL link).
+- `src/pages/portfolio.module.css` — Scoped styles for the portfolio page and cards.
 
 **Configuration:**
 - `docusaurus.config.js` — Main config: site metadata, navbar, footer, theme (Prism), presets
