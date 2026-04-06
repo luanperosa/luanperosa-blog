@@ -17,6 +17,17 @@
 
 # IDE
 /.vscode
+/.claude
+/.agent
+/.codex
+/.cursor
+/.gemini
+/.github
+/.opencode
+/.windsurf
+
+# GSD
+/.planning
 
 npm-debug.log*
 yarn-debug.log*

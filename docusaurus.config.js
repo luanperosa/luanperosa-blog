@@ -76,15 +76,15 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/luanperosa/50602816.jpeg',
+      image: 'img/logo.png',
       colorMode: {
-        respectPrefersColorScheme: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
         title: 'Luan Perosa',
         logo: {
           alt: 'Luan Perosa Logo',
-          src: 'img/luanperosa/50602816.jpeg',
+          src: 'img/logo.png',
         },
         items: [
           // {
@@ -93,6 +93,7 @@ const config = {
           //   position: 'left',
           //   label: 'Tutorial',
           // },
+          {to: '/portfolio', label: 'Portfolio', position: 'right'},
           {to: '/blog', label: 'Blog', position: 'right'},
           {
             href: 'https://github.com/luanperosa/luanperosa-blog',
