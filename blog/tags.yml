@@ -12,3 +12,13 @@ docker:
   label: Docker
   permalink: /docker
   description: Posts about Docker and containerization
+
+nodejs:
+  label: Node.js
+  permalink: /nodejs
+  description: Posts about Node.js and JavaScript
+
+javascript:
+  label: JavaScript
+  permalink: /javascript
+  description: Posts about JavaScript and web development

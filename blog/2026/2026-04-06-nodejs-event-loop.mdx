@@ -1,0 +1,258 @@
+---
+slug: nodejs-event-loop
+title: The Node.js Event Loop — How JavaScript Handles Async on a Single Thread
+tags: [nodejs, javascript]
+---
+
+import JsEventLoopAnimated from '@site/src/components/Markdown/JsEventLoopAnimated';
+
+JavaScript is single-threaded. One thread, one call stack, one thing at a time. And yet, Node.js handles thousands of concurrent connections without breaking a sweat. That seems like a contradiction — so how does it actually work?
+
+The answer is the **event loop**.
+
+<!-- truncate -->
+
+## JavaScript Is Single-Threaded
+
+Before anything else, it's important to understand what "single-threaded" means in practice. JavaScript has one call stack. That stack is where your code runs, synchronously, top to bottom, one line at a time.
+
+A `console.log`? Goes on the stack, runs immediately, pops off.
+
+A function call? Goes on the stack, runs, pops off.
+
+This is straightforward until you introduce asynchronous operations — like reading a file, calling an API, or using `setTimeout`. Those can't block the stack while they wait for a for a result. That's where the event loop comes in.
+
+---
+
+## The Call Stack and Queues
+
+Given the following code snippet, what do you think the output will be?
+
+```js
+console.log('start');
+setTimeout(() => console.log('setTimeout'), 0);
+setImmediate(() => console.log('setImmediate'));
+Promise.resolve().then(() => console.log('promise'));
+process.nextTick(() => console.log('nextTick'));
+console.log('end');
+```
+
+<JsEventLoopAnimated />
+
+Think of execution in Node.js as working with a stack and a couple of queues:
+
+- **Call Stack** — where synchronous code runs, here the code runs FILO (first-in, last-out)
+- **Microtask Queue** — where Promise callbacks and `process.nextTick()` wait
+- **Macrotask Phase Queue** — each event loop phase has its own FIFO (first-in, first-out) queue managed by libuv (`setTimeout`, I/O callbacks, `setImmediate`, etc.)
+
+The priority order is: call stack first, then microtasks, then the event loop phases.
+
+When the call stack encounters something like `Promise.resolve().then(...)`, it doesn't execute the callback immediately. It schedules it in the microtask queue and moves on. Crucially, microtasks aren't just drained once after the call stack empties — they are drained between every phase transition. So `process.nextTick()` and Promise callbacks can run between the timers phase and the pending callbacks phase, for example, not only at the "top" of the loop.
+
+---
+
+## libuv: The Async Intermediary Layer
+
+![nodejs-event-loop-libuv](/img/blogPosts/nodejs_event_loop_libuv_flow.svg)
+
+Before diving into the event loop phases, it's worth answering a question the queue explanation leaves open: when you call `setTimeout()` or `fs.readFile()`, where does the work actually go while the call stack moves on?
+
+In browsers, the answer is Web APIs — a layer provided by the browser runtime that offloads things like timers, `fetch`, and geolocation to native code, then pushes a callback into the task queue when done. Node.js has no browser. Its equivalent is **libuv**: a cross-platform C library that is the engine beneath Node's async capabilities.
+
+When your JavaScript calls an async operation, Node hands it to libuv. What happens next depends on the type of operation:
+
+**OS-delegated work (no thread required)**
+Network I/O — HTTP requests, TCP sockets, UDP — is handled directly by the operating system's event notification system: `epoll` on Linux, `kqueue` on macOS, IOCP on Windows. The OS watches the file descriptor and signals libuv when data arrives or a connection is ready. No Node.js thread is blocked at any point.
+
+**Timers**
+`setTimeout` and `setInterval` are backed by libuv's own timer heap, which is also OS-driven. The delay you pass is a minimum threshold registered with the OS — when it elapses, libuv marks the callback as ready for the timers phase.
+
+**Thread pool work (blocking operations)**
+Some operations have no non-blocking OS equivalent: file system I/O, DNS resolution, and certain crypto operations. For these, libuv maintains a **thread pool** — four threads by default, configurable via the `UV_THREADPOOL_SIZE` environment variable. The blocking work runs on one of those threads, leaving the main JS thread free. When the work is done, the thread pool notifies libuv, which queues the callback for the poll phase.
+
+The key insight is that libuv's job is the same as the browser's Web API layer: accept the work, run it off the call stack (via the OS or a thread), and deliver a callback to the right event loop queue once it's complete. The event loop then picks it up in the appropriate phase — which brings us to those phases.
+
+---
+
+## Event Loop Phases
+
+Node.js doesn't have a single flat "macrotask queue" like the browser model implies. Instead, the event loop cycles through 7 phases, each managed by libuv with its own FIFO queue of callbacks. Two of them (idle and prepare) are internal-only. The ones that matter in practice are these:
+
+```
+   ┌───────────────────────────┐
+   │           timers          │  ← setTimeout / setInterval callbacks
+   └─────────────┬─────────────┘
+                 ↓
+   ┌───────────────────────────┐
+   │     pending callbacks     │  ← deferred I/O error callbacks
+   └─────────────┬─────────────┘
+                 ↓
+   ┌───────────────────────────┐
+   │       idle, prepare       │  ← internal use only
+   └─────────────┬─────────────┘
+                 ↓
+   ┌───────────────────────────┐
+   │           poll            │  ← retrieve new I/O events
+   └─────────────┬─────────────┘
+                 ↓
+   ┌───────────────────────────┐
+   │           check           │  ← setImmediate callbacks
+   └─────────────┬─────────────┘
+                 ↓
+   ┌───────────────────────────┐
+   │      close callbacks      │  ← socket.on('close', ...)
+   └─────────────┬─────────────┘
+                 ↓
+              (repeat)
+```
+
+Let's focus on the ones that matter most day-to-day.
+
+### timers
+This phase executes callbacks scheduled by `setTimeout()` and `setInterval()`. The delay you pass is a minimum threshold, not a guarantee — OS scheduling and other callbacks can push timers past their intended time.
+
+### poll
+This is the workhorse phase. It retrieves new I/O events from libuv and executes their callbacks. If there's nothing to do, the event loop will block here — but not indefinitely. It blocks only up to the nearest timer deadline, so pending `setTimeout` or `setInterval` callbacks can still fire on time.
+
+If a `setImmediate()` callback has been scheduled, the loop will skip waiting and move on to the check phase instead.
+
+### check
+This is where `setImmediate()` callbacks run — always after the current poll phase completes.
+
+### pending callbacks
+Handles I/O error callbacks deferred to the next loop iteration, like certain TCP socket errors.
+
+## `setImmediate()` vs `setTimeout()`
+
+These two are often confused, and honestly the naming doesn't help at all.
+
+- `setTimeout(fn, 0)` runs in the **timers** phase
+- `setImmediate(fn)` runs in the **check** phase — after poll
+
+When called from the **main module** (outside any I/O callback), the order between them is non-deterministic. The reason is how libuv handles timer resolution: `setTimeout(fn, 0)` gets clamped to a minimum delay (which varies by platform and libuv version — it's not a fixed 1ms). Whether that minimum has already elapsed by the time the event loop first reaches the timers phase depends on how long process startup took. If the timer threshold has already passed, `setTimeout` fires first; if not, the loop skips timers and reaches `setImmediate` first. Either way, it's a race you can't rely on:
+
+```js
+setTimeout(() => console.log('timeout'), 0);
+setImmediate(() => console.log('immediate'));
+
+// Output is non-deterministic:
+// Could be: timeout → immediate
+// Could be: immediate → timeout
+```
+
+But when called **inside an I/O callback**, `setImmediate` always wins. Because the event loop is already past the timers phase and heading toward check:
+
+```js
+const fs = require('node:fs');
+
+fs.readFile(__filename, () => {
+  setTimeout(() => console.log('timeout'), 0);
+  setImmediate(() => console.log('immediate'));
+});
+
+// Always: immediate → timeout
+```
+
+---
+
+## `process.nextTick()` — Drained Between Every Phase
+
+Here's a subtle but important point: `process.nextTick()` callbacks are processed by the event loop machinery, but their queue is special — it's drained **between every phase transition**, and in newer Node.js versions even between individual callbacks within a phase. The common framing of "not part of the event loop" just means its queue isn't one of the 7 libuv phases — it's handled separately by Node.js itself, at a higher priority level.
+
+Inside the microtask queue, `process.nextTick()` has **higher priority than Promise callbacks**. So the full execution priority looks like this:
+
+| Priority | What runs |
+|---|---|
+| 1 | Synchronous code (call stack) |
+| 2 | `process.nextTick()` callbacks |
+| 3 | Promise `.then()` / microtasks |
+| 4 | Macrotasks: timers, I/O, `setImmediate` |
+
+One practical use case: ensuring a callback always runs *after* the current call stack unwinds, even if the underlying operation is synchronous. This is a common pattern in Node.js APIs to preserve consistent async behavior:
+
+```js
+function apiCall(arg, callback) {
+  if (typeof arg !== 'string') {
+    return process.nextTick(callback, new TypeError('argument should be a string'));
+  }
+  // ... async work
+}
+```
+
+Without `process.nextTick`, the error callback could fire synchronously — before the caller has a chance to set up any state. Wrapping it in `nextTick` guarantees it always runs after the current code finishes.
+
+> One word of caution: recursive `process.nextTick()` calls can starve the event loop, blocking the poll phase indefinitely. Use it carefully.
+
+---
+
+## The Classic Interview Snippet
+
+This is the kind of code that shows up in technical interviews. Try to predict the output before reading the answer:
+
+```js
+console.log('start');
+
+setTimeout(() => console.log('setTimeout'), 0);
+
+setImmediate(() => console.log('setImmediate'));
+
+Promise.resolve().then(() => console.log('promise'));
+
+process.nextTick(() => console.log('nextTick'));
+
+console.log('end');
+```
+
+Let's walk through it:
+
+1. `console.log('start')` — synchronous, runs immediately on the call stack
+2. `setTimeout` — registered into the timers phase queue
+3. `setImmediate` — registered into the check phase queue
+4. `Promise.resolve().then(...)` — scheduled into the microtask queue
+5. `process.nextTick(...)` — scheduled into the nextTick queue (highest priority)
+6. `console.log('end')` — synchronous, runs immediately on the call stack
+
+The synchronous script finishes. Before the event loop advances to its first phase, Node.js drains microtasks: `nextTick` queue first (completely), then Promise callbacks.
+
+The event loop then enters the timers phase. `setTimeout` fires. Before moving to the next phase, microtasks are drained again — there are none here, so the loop continues. Eventually the check phase runs `setImmediate`.
+
+**Expected output:**
+```
+start
+end
+nextTick
+promise
+setTimeout
+setImmediate
+```
+
+> Note: `setTimeout` before `setImmediate` here isn't guaranteed when called from the main module — but it's the most common result.
+
+
+
+## Why This Matters for Performance
+
+The whole reason Node.js can handle many concurrent connections with a single thread is because it delegates I/O to the operating system via libuv. When you make a database query or an HTTP request, Node doesn't sit there waiting. It hands it to libuv, which hands it to the OS or the thread pool, registers a callback, and keeps the event loop running.
+
+When the OS signals that the operation is complete, libuv queues the callback. The event loop picks it up at the appropriate phase. No thread-per-request overhead. No blocking.
+
+This is what makes Node.js well-suited for I/O-intensive workloads — not CPU-heavy tasks (those still block the event loop), but anything involving networks, files, or databases.
+
+## Summary
+
+| Priority | Construct | When it runs |
+|---|---|---|
+| 1 | Synchronous code | Call stack, immediately |
+| 2 | `process.nextTick()` | After current op, before Promises |
+| 3 | `Promise.then()` | After `nextTick` queue empties |
+| 4 | `setTimeout` / `setInterval` | timers phase |
+| 5 | I/O callbacks | poll phase |
+| 6 | `setImmediate` | check phase |
+
+> Microtasks (rows 2–3) are drained completely between each phase transition, not just once at the start of the loop.
+
+The event loop isn't magic — it's an ordered, predictable mechanism. Once you understand the phase ordering, the libuv handoff, and the queue priorities, the execution order of async code stops being a black box.
+
+Additional resources and references:
+- [Node.js Event Loop Documentation](https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick)
+- [JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue](https://www.youtube.com/watch?v=eiC58R16hb8)
