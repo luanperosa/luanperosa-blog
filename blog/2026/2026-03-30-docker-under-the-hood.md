@@ -10,6 +10,8 @@ First things first: Docker is **not** a virtual machine. It provides similar iso
 
 So what is Docker, exactly? At its core, it's a process running on your Linux system — one that has been isolated from the rest of the machine in a way that makes it feel entirely self-contained. Instead of emulating a full kernel like a VM does, Docker isolates a single process using primitives built directly into the Linux kernel. Let's dig into how that actually works.
 
+<!-- truncate -->
+
 ---
 
 ## Processes and Isolation
