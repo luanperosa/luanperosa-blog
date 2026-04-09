@@ -41,7 +41,7 @@ console.log('end');
 
 Think of execution in Node.js as working with a stack and a couple of queues:
 
-- **Call Stack** — where synchronous code runs, here the code runs FILO (first-in, last-out)
+- **Call Stack** — where synchronous code runs, here the code runs LIFO (Last-In, First-Out)
 - **Microtask Queue** — where Promise callbacks and `process.nextTick()` wait
 - **Macrotask Phase Queue** — each event loop phase has its own FIFO (first-in, first-out) queue managed by libuv (`setTimeout`, I/O callbacks, `setImmediate`, etc.)
 
