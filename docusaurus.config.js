@@ -77,6 +77,10 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/logo.png',
+      metadata: [
+        {property: 'og:site_name', content: 'Luan Perosa'},
+        {name: 'linkedin', content: 'https://www.linkedin.com/in/luan-perosa'},
+      ],
       colorMode: {
         respectPrefersColorScheme: false,
       },

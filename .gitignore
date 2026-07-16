@@ -23,6 +23,7 @@
 /.cursor
 /.gemini
 /.github
+!/.github/workflows/
 /.opencode
 /.windsurf
 
