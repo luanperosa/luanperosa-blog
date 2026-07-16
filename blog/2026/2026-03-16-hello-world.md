@@ -1,6 +1,7 @@
 ---
 slug: hello-world
 title: Hello World — Starting My Blog
+description: Why I'm starting a technical blog — a space for notes from my journey as a software engineer, things I'm learning, and problems I solve along the way.
 authors: [luan]
 tags: [personal, learning]
 ---

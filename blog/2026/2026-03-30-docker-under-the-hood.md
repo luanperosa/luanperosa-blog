@@ -1,6 +1,7 @@
 ---
 slug: docker-under-the-hood
 title: Docker Under the Hood
+description: Docker is not a virtual machine — it's a process isolated by the Linux kernel using namespaces and cgroups. A hands-on look at what runs in a container.
 tags: [docker, learning]
 ---
 
