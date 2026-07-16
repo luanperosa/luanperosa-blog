@@ -9,11 +9,11 @@
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
-            <title><![CDATA[The Node.js Event Loop — How JavaScript Handles Async on a Single Thread]]></title>
+            <title><![CDATA[The Node.js Event Loop — Async on a Single Thread]]></title>
             <link>https://luanperosa.com/blog/nodejs-event-loop</link>
             <guid>https://luanperosa.com/blog/nodejs-event-loop</guid>
             <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[JavaScript is single-threaded. One thread, one call stack, one thing at a time. And yet, Node.js handles thousands of concurrent connections without breaking a sweat. That seems like a contradiction — so how does it actually work?]]></description>
+            <description><![CDATA[How Node.js handles thousands of concurrent connections on a single thread — a practical walk through the call stack, event loop, and libuv worker pool.]]></description>
             <content:encoded><![CDATA[<p>JavaScript is single-threaded. One thread, one call stack, one thing at a time. And yet, Node.js handles thousands of concurrent connections without breaking a sweat. That seems like a contradiction — so how does it actually work?</p>
 <p>The answer is the <strong>event loop</strong>.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="javascript-is-single-threaded">JavaScript Is Single-Threaded<a href="https://luanperosa.com/blog/nodejs-event-loop#javascript-is-single-threaded" class="hash-link" aria-label="Direct link to JavaScript Is Single-Threaded" title="Direct link to JavaScript Is Single-Threaded" translate="no">​</a></h2>
@@ -361,7 +361,7 @@ Some operations have no non-blocking OS equivalent: file system I/O, DNS resolut
             <link>https://luanperosa.com/blog/docker-under-the-hood</link>
             <guid>https://luanperosa.com/blog/docker-under-the-hood</guid>
             <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[First things first: Docker is not a virtual machine. It provides similar isolation benefits, but without virtualizing an entire operating system the way a VM does. This is a common misconception worth clearing up before we go any further.]]></description>
+            <description><![CDATA[Docker is not a virtual machine — it's a process isolated by the Linux kernel using namespaces and cgroups. A hands-on look at what runs in a container.]]></description>
             <content:encoded><![CDATA[<p>First things first: Docker is <strong>not</strong> a virtual machine. It provides similar isolation benefits, but without virtualizing an entire operating system the way a VM does. This is a common misconception worth clearing up before we go any further.</p>
 <p>So what is Docker, exactly? At its core, it's a process running on your Linux system — one that has been isolated from the rest of the machine in a way that makes it feel entirely self-contained. Instead of emulating a full kernel like a VM does, Docker isolates a single process using primitives built directly into the Linux kernel. Let's dig into how that actually works.</p>
 <hr>
@@ -432,7 +432,7 @@ Some operations have no non-blocking OS equivalent: file system I/O, DNS resolut
             <link>https://luanperosa.com/blog/hello-world</link>
             <guid>https://luanperosa.com/blog/hello-world</guid>
             <pubDate>Mon, 16 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Hey there! Welcome to my blog.]]></description>
+            <description><![CDATA[Why I'm starting a technical blog — a space for notes from my journey as a software engineer, things I'm learning, and problems I solve along the way.]]></description>
             <content:encoded><![CDATA[<p>Hey there! Welcome to my blog.</p>
 <p>I've decided to start documenting my journey as a software engineer. This space will be a place where I share what I'm learning, the challenges I run into, and the things I find interesting along the way.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-start-a-blog">Why start a blog?<a href="https://luanperosa.com/blog/hello-world#why-start-a-blog" class="hash-link" aria-label="Direct link to Why start a blog?" title="Direct link to Why start a blog?" translate="no">​</a></h2>
