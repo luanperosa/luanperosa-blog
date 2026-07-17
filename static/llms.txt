@@ -1,0 +1,31 @@
+# Luan Perosa
+
+> Personal tech blog and portfolio of Luan Perosa Chitto, a Software Engineer. The site collects notes on software engineering — things learned, problems solved, and how systems work under the hood — alongside a portfolio of shipped e-commerce and web projects.
+
+- The blog focuses on hands-on, from-first-principles explanations (Docker internals, the Node.js event loop, etc.).
+- Built with Docusaurus and hosted at https://luanperosa.com.
+
+## Blog Posts
+
+- [Hello World — Starting My Blog](https://luanperosa.com/blog/hello-world): Why I'm starting a technical blog — a space for notes from my journey as a software engineer, things I'm learning, and problems I solve along the way.
+- [Docker Under the Hood](https://luanperosa.com/blog/docker-under-the-hood): Docker is not a virtual machine — it's a process isolated by the Linux kernel using namespaces and cgroups. A hands-on look at what runs in a container.
+- [The Node.js Event Loop — Async on a Single Thread](https://luanperosa.com/blog/nodejs-event-loop): How Node.js handles thousands of concurrent connections on a single thread — a practical walk through the call stack, event loop, and libuv worker pool.
+
+## Pages
+
+- [Blog](https://luanperosa.com/blog): Full list of blog posts, newest first.
+- [Portfolio](https://luanperosa.com/portfolio): Selected software projects, including Nestlé Nutre, Motiva, VapeCraft, Frontier, Wheel Pros, Hortifruti & Natural da Terra, Broto (Bank of Brazil), and Elgin.
+
+## Topics
+
+- [Docker](https://luanperosa.com/docker): Posts about Docker and containerization.
+- [Node.js](https://luanperosa.com/nodejs): Posts about Node.js and JavaScript.
+- [JavaScript](https://luanperosa.com/javascript): Posts about JavaScript and web development.
+- [Learning](https://luanperosa.com/learning): Posts about my learning process.
+- [Personal](https://luanperosa.com/personal): Personal posts about my journey.
+
+## About
+
+- Author: Luan Perosa Chitto — Software Engineer.
+- LinkedIn: https://www.linkedin.com/in/luan-perosa
+- GitHub: https://github.com/luanperosa
